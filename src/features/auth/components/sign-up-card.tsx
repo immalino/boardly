@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { registerSchema } from "../schemas";
 import { useRegister } from "../api/use-register";
+import { UserButton } from "./user-button";
 
 export const SignUpCard = () => {
   const { mutate, isPending } = useRegister();
@@ -152,6 +153,7 @@ export const SignUpCard = () => {
             <span className="text-blue-700">&nbsp;Sign In</span>
           </Link>
         </p>
+        <UserButton />
       </CardContent>
     </Card>
   );
