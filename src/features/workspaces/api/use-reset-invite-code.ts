@@ -5,35 +5,37 @@ import { InferRequestType, InferResponseType } from "hono";
 import { client } from "@/lib/rpc";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.workspaces)[":workspaceId"]["$delete"],
-  200
+  (typeof client.api.workspaces)[":workspaceId"]["reset-ivite-code"]["$post"],
+  201
 >;
 type RequestType = InferRequestType<
-  (typeof client.api.workspaces)[":workspaceId"]["$delete"]
+  (typeof client.api.workspaces)[":workspaceId"]["reset-ivite-code"]["$post"]
 >;
 
-export const useDeleteWorkspace = () => {
+export const useResetInviteCode = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async ({ param }) => {
-      const response = await client.api.workspaces[":workspaceId"]["$delete"]({
+      const response = await client.api.workspaces[":workspaceId"][
+        "reset-ivite-code"
+      ]["$post"]({
         param,
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete workspace");
+        throw new Error("Failed to reset invite code");
       }
 
       return await response.json();
     },
     onSuccess: ({ data }) => {
-      toast.success("Workspace deleted");
+      toast.success("Invite code reset");
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({ queryKey: ["workspace", data.$id] });
     },
     onError: () => {
-      toast.error("Failed to delete workspace");
+      toast.error("Failed to reset invite code");
     },
   });
 
