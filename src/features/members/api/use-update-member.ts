@@ -33,7 +33,7 @@ export const useUpdateMember = () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
     },
     onError: () => {
-      toast.error("Failed to delete member");
+      toast.error("Failed to update member");
     },
   });
 
