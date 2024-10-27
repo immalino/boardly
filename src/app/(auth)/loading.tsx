@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const LoadingPage = () => {
   return (
-    <div className="h-screen w-full flex gap-y-2 items-center justify-center">
+    <div className="h-screen flex fixed gap-y-2 items-center justify-center">
       <Loader className="size-6 animate-spin text-muted-foreground" />
     </div>
   );
