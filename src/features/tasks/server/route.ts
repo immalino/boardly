@@ -13,6 +13,29 @@ import { Task, TaskStatus } from "../types";
 import { Project } from "@/features/projects/types";
 
 const app = new Hono()
+  .delete("/:taskId", sessionMidddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+    const { taskId } = c.req.param();
+
+    const task = await databases.getDocument<Task>(
+      DATABASE_ID,
+      TASKS_ID,
+      taskId
+    );
+
+    const member = await getMember({
+      databases,
+      workspaceId: task.workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) return c.json({ error: "Unauthorized" }, 401);
+
+    await databases.deleteDocument(DATABASE_ID, TASKS_ID, taskId);
+
+    return c.json({ data: { $id: task.$id } });
+  })
   .get(
     "/",
     sessionMidddleware,
