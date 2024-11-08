@@ -18,9 +18,12 @@ import { DataKanban } from "./data-kanban";
 import { useCallback } from "react";
 import { number, string } from "zod";
 import { TaskStatus } from "../types";
+import { useBulkUpdateTasks } from "../api/use-bulk-update-task";
 
 export const TaskViewSwitcher = () => {
   const [{ status, assigneeId, projectId, dueDate }] = useTaskFilters();
+
+  const { mutate: bulkUpdateTasks } = useBulkUpdateTasks();
 
   const [view, setView] = useQueryState("task-view", {
     defaultValue: "table",
@@ -38,8 +41,12 @@ export const TaskViewSwitcher = () => {
   });
 
   const onKanbanChange = useCallback(
-    (tasks: { $id: string; status: TaskStatus; position: number }[]) => {},
-    []
+    (tasks: { $id: string; status: TaskStatus; position: number }[]) => {
+      bulkUpdateTasks({
+        json: { tasks },
+      });
+    },
+    [bulkUpdateTasks]
   );
 
   return (
