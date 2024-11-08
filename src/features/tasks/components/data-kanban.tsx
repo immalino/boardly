@@ -3,7 +3,7 @@ import {
   DragDropContext,
   Droppable,
   Draggable,
-  DropResult,
+  type DropResult,
 } from "@hello-pangea/dnd";
 
 import { Task, TaskStatus } from "../types";
@@ -24,9 +24,12 @@ type TaskState = {
 
 interface DataKanbanProps {
   data: Task[];
+  onChange: (
+    tasks: { $id: string; status: TaskStatus; position: number }[]
+  ) => void;
 }
 
-export const DataKanban = ({ data }: DataKanbanProps) => {
+export const DataKanban = ({ data, onChange }: DataKanbanProps) => {
   const [tasks, setTasks] = useState<TaskState>(() => {
     const initialTasks: TaskState = {
       [TaskStatus.BACKLOG]: [],
@@ -49,8 +52,106 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
     return initialTasks;
   });
 
+  useEffect(() => {
+    const newTask: TaskState = {
+      [TaskStatus.BACKLOG]: [],
+      [TaskStatus.TODO]: [],
+      [TaskStatus.IN_PROGRESS]: [],
+      [TaskStatus.IN_REVIEW]: [],
+      [TaskStatus.DONE]: [],
+    };
+
+    data.forEach((task) => {
+      newTask[task.status].push(task);
+    });
+
+    Object.keys(newTask).forEach((status) => {
+      newTask[status as TaskStatus].sort((a, b) => a.position - b.position);
+    });
+
+    setTasks(newTask);
+  }, [data]);
+
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      if (!result.destination) return;
+
+      const { destination, source } = result;
+      const sourceStatus = source.droppableId as TaskStatus;
+      const destStatus = destination.droppableId as TaskStatus;
+
+      let updatePlayload: {
+        $id: string;
+        status: TaskStatus;
+        position: number;
+      }[] = [];
+
+      setTasks((prevTask) => {
+        const newTask = { ...prevTask };
+
+        const sourceColumn = [...newTask[sourceStatus]];
+        const [movedTask] = sourceColumn.splice(source.index, 1);
+
+        if (!movedTask) return prevTask;
+
+        const updatedMovedTask =
+          sourceStatus !== destStatus
+            ? { ...movedTask, status: destStatus }
+            : movedTask;
+
+        newTask[sourceStatus] = sourceColumn;
+
+        const destColumn = [...newTask[destStatus]];
+        destColumn.splice(destination.index, 0, updatedMovedTask);
+
+        newTask[destStatus] = destColumn;
+
+        updatePlayload = [];
+
+        updatePlayload.push({
+          $id: updatedMovedTask.$id,
+          status: destStatus,
+          position: Math.min((destination.index + 1) * 1000, 1_000_000),
+        });
+
+        newTask[destStatus].forEach((task, index) => {
+          if (task && task.$id !== updatedMovedTask.$id) {
+            const newPosition = Math.min((index + 1) * 1000, 1_000_000);
+            if (task.position !== newPosition) {
+              updatePlayload.push({
+                $id: task.$id,
+                status: destStatus,
+                position: newPosition,
+              });
+            }
+          }
+        });
+
+        if (sourceStatus !== destStatus) {
+          newTask[sourceStatus].forEach((task, index) => {
+            if (task) {
+              const newPosition = Math.min((index + 1) * 1000, 1_000_000);
+              if (task.position !== newPosition) {
+                updatePlayload.push({
+                  $id: task.$id,
+                  status: sourceStatus,
+                  position: newPosition,
+                });
+              }
+            }
+          });
+        }
+
+        return newTask;
+      });
+
+      onChange(updatePlayload);
+    },
+    [onChange]
+  );
+
   return (
-    <DragDropContext onDragEnd={() => {}}>
+    <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex overflow-x-auto">
         {boards.map((board) => {
           return (
@@ -60,7 +161,7 @@ export const DataKanban = ({ data }: DataKanbanProps) => {
             >
               <KanbanColumnHeader
                 board={board}
-                taskCount={tasks[board].length}
+                taskCount={tasks[board]?.length}
               />
               <Droppable droppableId={board}>
                 {(provided) => (
