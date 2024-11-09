@@ -6,6 +6,7 @@ import {
   addMonths,
   subMonths,
 } from "date-fns";
+import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { enUS } from "date-fns/locale";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 
@@ -16,6 +17,7 @@ import "./data-calendar.css";
 
 import { useState } from "react";
 import { EventCard } from "./event-card";
+import { Button } from "@/components/ui/button";
 
 const locales = {
   "en-US": enUS,
@@ -32,6 +34,36 @@ const localizer = dateFnsLocalizer({
 interface DataCalendarProps {
   data: Task[];
 }
+
+interface CustomToolbarProps {
+  date: Date;
+  onNavigate: (action: "PREV" | "NEXT" | "TODAY") => void;
+}
+
+const CustomToolbar = ({ date, onNavigate }: CustomToolbarProps) => {
+  return (
+    <div className="flex items-center mb-4 gap-x-2 w-full lg:w-auto justify-center lg:justify-start">
+      <Button
+        variant="secondary"
+        size="icon"
+        onClick={() => onNavigate("PREV")}
+      >
+        <ChevronLeftIcon className="w-4 h-4" />
+      </Button>
+      <div className="flex items-center justify-center border border-input px-3 py-2 h-8 w-full lg:w-auto">
+        <CalendarIcon className="size-4 mr-2" />
+        <p className="text-sm">{format(date, "MMMM yyyy")}</p>
+      </div>
+      <Button
+        variant="secondary"
+        size="icon"
+        onClick={() => onNavigate("NEXT")}
+      >
+        <ChevronRightIcon className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+};
 
 export const DataCalendar = ({ data }: DataCalendarProps) => {
   const [value, setValue] = useState<Date>(
@@ -82,6 +114,9 @@ export const DataCalendar = ({ data }: DataCalendarProps) => {
             project={event.project}
             status={event.status}
           />
+        ),
+        toolbar: () => (
+          <CustomToolbar date={value} onNavigate={handleNavigate} />
         ),
       }}
     />
