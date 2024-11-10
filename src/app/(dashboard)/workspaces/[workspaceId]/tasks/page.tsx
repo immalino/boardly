@@ -5,7 +5,7 @@ import { TaskViewSwitcher } from "@/features/tasks/components/task-view-switcher
 
 const TasksPage = async () => {
   const user = await getCurrent();
-  if (!user) redirect("/login");
+  if (!user) redirect("/sign-in");
 
   return (
     <div className="flex w-full flex-col">
