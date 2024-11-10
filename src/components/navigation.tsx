@@ -22,7 +22,7 @@ const route = [
   },
   {
     label: "My Task",
-    href: "/task",
+    href: "/tasks",
     icon: GoCheckCircle,
     activeIcon: GoCheckCircleFill,
   },
