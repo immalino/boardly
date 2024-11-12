@@ -1,7 +1,7 @@
 "use client";
 
 import { DottedSeparator } from "@/components/dotted-separator";
-import { PageErrorPage } from "@/components/page-error";
+import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
 import { useGetTask } from "@/features/tasks/api/use-get-task";
 import { TaskBreadcrumbs } from "@/features/tasks/components/task-breadrumbs";
@@ -14,7 +14,7 @@ const TaskIdClient = () => {
   const { data: task, isLoading } = useGetTask({ taskId });
 
   if (isLoading) return <PageLoader />;
-  if (!task) return <PageErrorPage message="Task not found" />;
+  if (!task) return <PageError message="Task not found" />;
   return (
     <div className="flex flex-col">
       <TaskBreadcrumbs project={task.project} task={task} />
