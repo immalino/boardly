@@ -267,8 +267,6 @@ const app = new Hono()
       taskId
     );
 
-    console.log(task);
-
     const currentMember = await getMember({
       databases,
       workspaceId: task.workspaceId,
@@ -341,7 +339,7 @@ const app = new Hono()
         );
       }
 
-      const workspaceId = workspaceIds.values().next().value;
+      const workspaceId = workspaceIds.values().next().value ?? "";
 
       const member = await getMember({
         databases,
