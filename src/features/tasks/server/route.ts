@@ -339,7 +339,14 @@ const app = new Hono()
         );
       }
 
-      const workspaceId = workspaceIds.values().next().value ?? "";
+      const workspaceId = workspaceIds.values().next().value;
+
+      if (!workspaceId) {
+        return c.json(
+          { error: "All tasks must be in the same workspace" },
+          400
+        );
+      }
 
       const member = await getMember({
         databases,
