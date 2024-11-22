@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FolderIcon, ListChecksIcon, UserIcon } from "lucide-react";
-import { SelectItemText, SelectSeparator } from "@radix-ui/react-select";
+import { SelectSeparator } from "@radix-ui/react-select";
 import { TaskStatus } from "../types";
 import { useTaskFilters } from "../hooks/use-task-filters";
 

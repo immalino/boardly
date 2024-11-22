@@ -1,14 +1,9 @@
 "use client";
 
 import { z } from "zod";
-import { ImageIcon } from "lucide-react";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,

@@ -9,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { boolean } from "zod";
 
 export const useConfirm = (
   title: string,

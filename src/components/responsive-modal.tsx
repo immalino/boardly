@@ -1,6 +1,6 @@
 import { useMedia } from "react-use";
 
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 

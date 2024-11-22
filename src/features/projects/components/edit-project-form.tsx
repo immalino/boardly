@@ -22,7 +22,7 @@ import { updateProjectSchema } from "../schemas";
 import { useUpdateProject } from "../api/use-update-project";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Image from "next/image";
-import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Project } from "../types";
@@ -167,7 +167,7 @@ export const EditProjectForm = ({
                             accept=".jpg, .png, .jpeg, .svg"
                             ref={inputRef}
                             onChange={handleImageChange}
-                            disabled={isPending}
+                            disabled={isPending || isDeletingProject}
                           />
                           {field.value ? (
                             <Button
@@ -188,7 +188,7 @@ export const EditProjectForm = ({
                           ) : (
                             <Button
                               type="button"
-                              disabled={isPending}
+                              disabled={isPending || isDeletingProject}
                               variant="teritary"
                               size="xs"
                               className="w-fit mt-2"
@@ -210,7 +210,7 @@ export const EditProjectForm = ({
                   size="lg"
                   variant="secondary"
                   onClick={onCancel}
-                  disabled={isPending}
+                  disabled={isPending || isDeletingProject}
                   className={cn(!onCancel && "invisible")}
                 >
                   Cancel
@@ -238,7 +238,7 @@ export const EditProjectForm = ({
               size="sm"
               variant="destructive"
               type="button"
-              disabled={isPending}
+              disabled={isPending || isDeletingProject}
               onClick={handleDelete}
             >
               Delete Project

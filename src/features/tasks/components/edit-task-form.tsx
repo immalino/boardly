@@ -1,14 +1,9 @@
 "use client";
 
 import { z } from "zod";
-import { ImageIcon } from "lucide-react";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
@@ -21,7 +16,6 @@ import {
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
 
 import { createTaskSchema } from "../schemas";
@@ -51,7 +45,6 @@ export const EditTaskForm = ({
   memberOptions,
   initialValues,
 }: EditTaskFormProps) => {
-  const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useUpdateTask();
 
   const form = useForm<z.infer<typeof createTaskSchema>>({

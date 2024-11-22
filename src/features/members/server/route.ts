@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
 import { getMember } from "../utils";
-import { DATABASE_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
+import { DATABASE_ID, MEMBERS_ID } from "@/config";
 import { Query } from "node-appwrite";
 import { Member, MemberRole } from "../types";
 
