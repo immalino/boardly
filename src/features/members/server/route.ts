@@ -39,7 +39,7 @@ const app = new Hono()
 
           return {
             ...member,
-            name: user.name,
+            name: user.name || user.email.split("@")[0],
             email: user.email,
           };
         })
